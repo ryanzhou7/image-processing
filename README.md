@@ -4,7 +4,7 @@ This application creates a diagnostic metric (loss percentage) that is 10X more 
 ### Demo
 See the demo video [here](https://youtu.be/OKbuDHhxGjg)
 
-Try it yourself by using a red sharpie to draw lines on a white piece of paper and opening up [the link](https://github.com/ryanzhou7/p-calc) with safari on an iOS device (Does not currently support desktop or other browsers).
+Try it yourself by using a red sharpie to draw lines on a white piece of paper and opening up [the link](https://ryanzhou7.github.io/p-calc/) with safari on an iOS device (Does not currently support desktop or other browsers).
 
 #### Disclosure
 This is for educational and informational purposes only, it is not intended to be used in any medical setting.
