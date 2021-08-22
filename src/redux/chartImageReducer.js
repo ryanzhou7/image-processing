@@ -1,16 +1,18 @@
-export function setImageOnload(source) {
+const sourceSet = "CHART_IMAGE_SOURCE_SET";
+const imageSet = "CHART_SET";
+export function setChartImageOnload(source) {
   return (dispatch) => {
     const image = new Image();
     image.onload = () => {
-      dispatch({ type: "IMAGE_SOURCE_SET", payload: image });
+      dispatch({ type: sourceSet, payload: image });
     };
     image.src = source;
   };
 }
 
-export function setImage(image) {
+export function setChartImage(image) {
   return {
-    type: "IMAGE_SET",
+    type: imageSet,
     payload: image,
   };
 }
@@ -22,12 +24,12 @@ const initialState = {
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
-    case "IMAGE_SOURCE_SET":
+    case sourceSet:
       return {
         ...state,
         source: action.payload,
       };
-    case "IMAGE_SET":
+    case imageSet:
       return {
         ...state,
         image: action.payload,

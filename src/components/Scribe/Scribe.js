@@ -37,7 +37,7 @@ function Scribe(props) {
 
   const canvasRef = useRef(null);
 
-  const imageSource = useSelector((state) => state.image.source);
+  const imageSource = useSelector((state) => state.chartImage.source);
   const combinedCanvasInfo = useSelector((state) => state.combinedCanvasInfo);
 
   const outerNumColoredPixels = combinedCanvasInfo.numColoredOuterPixels;

@@ -2,17 +2,14 @@ import React, { useRef, useEffect, useState } from "react";
 import { Button, Card, OverlayTrigger, Popover } from "react-bootstrap";
 import { withOrientationChange } from "react-device-detect";
 import Webcam from "react-webcam";
-import * as imageReducer from "../../redux/chartImageReducer";
+import * as imageReducer from "../../redux/eyesImageReducer";
 import { useSelector, useDispatch } from "react-redux";
-import Adjuster from "../Adjuster/Adjuster";
 import target from "../../assets/target/circle.png";
 import sample from "../../assets/sample/63.jpg";
 import "./index.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-// For the analysis
-
-function Chart(props) {
+function Eyes(props) {
   // Setup
   const dispatch = useDispatch();
   const [isCameraOn, setIsCameraOn] = useState(true);
@@ -22,7 +19,7 @@ function Chart(props) {
   const videoConstraints = useSelector(
     (state) => state.videoReducer.videoConstraints
   );
-  const image = useSelector((state) => state.chartImage.source);
+  const eyesImage = useSelector((state) => state.eyesImage.source);
   const canvasDimensions = useSelector(
     (state) => state.canvasSettings.canvasDimensions
   );
@@ -33,11 +30,10 @@ function Chart(props) {
   // Ref
   const webcamContainerRef = useRef(null);
   const webcamRef = useRef(null);
-  const autoAnalyzeContainerRef = useRef(null);
 
   // Set a default image for debugging bad images
   useEffect(() => {
-    //dispatch(imageReducer.setChartImageOnload(sample));
+    //dispatch(imageReducer.setImageOnload(sample));
   }, []);
 
   const capture = () => {
@@ -47,28 +43,10 @@ function Chart(props) {
     }
 
     const screenshot = webcamRef.current.getScreenshot();
-    dispatch(imageReducer.setChartImageOnload(screenshot));
-    dispatch(imageReducer.setChartImage(screenshot));
-    window.scrollTo(0, autoAnalyzeContainerRef.current.offsetTop);
+    dispatch(imageReducer.setEyesImageOnload(screenshot));
+    dispatch(imageReducer.setEyesImage(screenshot));
 
     setIsCameraOn(false);
-  };
-
-  // Children props setup
-  const adjusterProps = {
-    webcamRef,
-    webcamContainerRef,
-    image: image,
-    canvasDimensions: {
-      canvasWidth: canvasDimensions.width,
-      canvasHeight: canvasDimensions.height,
-    },
-    drawDimensions: {
-      drawWidth: canvasDimensions.width,
-      drawHeight: canvasDimensions.height,
-    },
-    isPortrait,
-    cameraState: [isCameraOn, setIsCameraOn],
   };
 
   const popover = (
@@ -83,17 +61,18 @@ function Chart(props) {
     </Popover>
   );
   return (
+
     <div className="App mt-2">
       <h2 className="card-title" style={{ display: "inline" }}>
         Capture chart{" "}
       </h2>
-      <OverlayTrigger trigger="click" placement="bottom" overlay={popover} >
+      <OverlayTrigger trigger="click" placement="bottom" overlay={popover}>
         <FontAwesomeIcon icon="question-circle" size="2x" />
       </OverlayTrigger>
       <Card className="mt-4">
         <div className="mx-auto">
           <div className="capture-container mx-auto" ref={webcamContainerRef}>
-            {isCameraOn && activeTab &&(
+            {isCameraOn && activeTab && (
               <>
                 <Webcam
                   ref={webcamRef}
@@ -122,14 +101,12 @@ function Chart(props) {
         </div>
       </Card>
 
-      <div className="mt-4" ref={autoAnalyzeContainerRef}>
-        <Adjuster {...adjusterProps} />
-      </div>
       <br />
       <br />
       <br />
     </div>
+
   );
 }
 
-export default withOrientationChange(Chart);
+export default withOrientationChange(Eyes);

@@ -18,7 +18,7 @@ function Adjuster(props) {
     (state) => state.combinedCanvasInfo.canvas
   );
   const combinedCanvasInfo = useSelector((state) => state.combinedCanvasInfo);
-  const imageSource = useSelector((state) => state.image.source);
+  const imageSource = useSelector((state) => state.chartImage.source);
   const threshold = useSelector((state) => state.downloadReducer.threshold);
   const setThreshold = (t) => {
     dispatch(downloadReducer.setThreshold(t));

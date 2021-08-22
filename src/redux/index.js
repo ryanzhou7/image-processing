@@ -1,15 +1,17 @@
 import { combineReducers, createStore, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
-import imageReducer from "./imageReducer";
+import chartImageReducer from "./chartImageReducer";
 import innerCanvasInfoReducer from "./innerCanvasInfoReducer";
 import outerCanvasInfoReducer from "./outerCanvasInfoReducer";
 import combinedCanvasInfoReducer from "./combinedCanvasInfoReducer";
 import canvasSettingsReducer from "./canvasSettingsReducer";
 import videoReducer from "./videoReducer";
 import downloadReducer from "./downloadReducer";
+import eyesImageReducer from "./eyesImageReducer";
 
 const rootReducer = combineReducers({
-  image: imageReducer,
+  eyesImage: eyesImageReducer,
+  chartImage: chartImageReducer,
   innerCanvasInfo: innerCanvasInfoReducer,
   outerCanvasInfo: outerCanvasInfoReducer,
   combinedCanvasInfo: combinedCanvasInfoReducer,
