@@ -24,9 +24,6 @@ function Eyes(props) {
     (state) => state.canvasSettings.canvasDimensions
   );
 
-  // Props
-  const { isPortrait } = props;
-
   // Ref
   const webcamContainerRef = useRef(null);
   const webcamRef = useRef(null);
@@ -52,11 +49,7 @@ function Eyes(props) {
   const popover = (
     <Popover id="popover-basic">
       <Popover.Content>
-        Draw your chart with red sharpie. Align the red target's circle
-        concentrically with the chart's smallest circle that still encompasses
-        all of the the drawn lines for increased accuracy. Also ensure the
-        target cross is aligned with the chart. Camera focus will happen
-        automatically. Tap the (?) again to close this popover.
+        Please position only the patients eyes between the black bars
       </Popover.Content>
     </Popover>
   );
@@ -64,7 +57,7 @@ function Eyes(props) {
 
     <div className="App mt-2">
       <h2 className="card-title" style={{ display: "inline" }}>
-        Capture chart{" "}
+        Capture eyes{" "}
       </h2>
       <OverlayTrigger trigger="click" placement="bottom" overlay={popover}>
         <FontAwesomeIcon icon="question-circle" size="2x" />
@@ -83,12 +76,14 @@ function Eyes(props) {
                   videoConstraints={videoConstraints}
                 />
                 <div className="overlay">
-                  <img
-                    className="target"
-                    //width -20 leaves some padding on the left and right side
-                    style={{ width: videoConstraints.width - 20 }}
-                    src={target}
-                  />
+                  <div className="top mx-auto"
+                    style={{width: videoConstraints.width}}
+                  > 
+                  </div>
+                  <div className="bottom mx-auto"
+                    style={{width: videoConstraints.width}}
+                  >
+                  </div>
                 </div>
               </>
             )}

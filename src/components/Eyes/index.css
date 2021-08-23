@@ -1,0 +1,30 @@
+.App {
+    text-align: center;
+  }
+  .overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    text-align: center;
+  }
+  
+  .top{
+    background-color: rgba(0, 0, 0, 0.7);
+    height: 150px;
+  }
+  .bottom{
+    background-color: rgba(0, 0, 0, 0.7);
+    margin-top: 100px;
+    height: 150px;
+  }
+  
+  .capture-container{
+    position: "relative";
+    float: "top" ;
+  }
+  
+  .capture-button{
+    padding: 6px 30px !important;
+  }
+  

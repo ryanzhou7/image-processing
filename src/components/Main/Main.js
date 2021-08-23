@@ -13,7 +13,7 @@ function Main() {
   const eyes = "Eyes";
   const notes = "Notes";
   
-  const [tab, setTab] = useState(chart);
+  const [tab, setTab] = useState(eyes);
 
   const chartProps = {
     activeTab: (tab === chart),
@@ -30,13 +30,13 @@ function Main() {
       onSelect={(k) => setTab(k)}
       className="mb-3 justify-content-center"
     >
-      <Tab eventKey={chart} title={"Chart"}>
+      <Tab eventKey={chart} title={chart}>
         <Chart selectedTab={tab} {...chartProps} />
       </Tab>
-      <Tab eventKey={eyes} title={"Eyes"}>
+      <Tab eventKey={eyes} title={eyes}>
         <Eyes selectedTab={tab} {...eyesProps} />
       </Tab>
-      <Tab eventKey={notes} title={"Notes"}>
+      <Tab eventKey={notes} title={notes}>
         <Scribe selectedTab={tab}/>
       </Tab>
     </Tabs>
