@@ -11,12 +11,12 @@
   
   .top{
     background-color: rgba(0, 0, 0, 0.7);
-    height: 150px;
+    /* height: 150px; */
   }
   .bottom{
     background-color: rgba(0, 0, 0, 0.7);
-    margin-top: 100px;
-    height: 150px;
+    /* margin-top: 100px; */
+    /* height: 150px; */
   }
   
   .capture-container{

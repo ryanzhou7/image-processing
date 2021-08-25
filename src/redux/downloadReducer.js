@@ -1,25 +1,34 @@
+import { CHECKBOX_VISION, CHECKBOX_DRIVING, CHECKBOX_READING, CHECKBOX_OTHER } from "../constants";
+
 export function setThreshold(threshold) {
   return { type: "SET_THRESHOLD", payload: threshold };
 }
 
-export function setAge(age) {
-  return { type: "SET_AGE", payload: age };
+export function setChecked(toggled) {
+  return { type: "SET_CHECKED", payload: toggled };
 }
 
-export function setSex(age) {
-  return { type: "SET_SEX", payload: age };
+export function setIdentifyingData(identifyingData) {
+  return { type: "SET_IDENTIFYING_DATA", payload: identifyingData };
 }
 
-export function setNote(note) {
-  return { type: "SET_NOTE", payload: note };
+export function setAdditionalComments(additionalComments) {
+  return { type: "SET_ADDITIONAL_COMMENTS", payload: additionalComments };
 }
 
 const initialState = {
+
   threshold: 20,
-  age: "",
-  sex: "",
-  note: "",
+
+  identifyingData: "",
+  additionalComments: "",
+  checked:{
+  }
 };
+initialState.checked[CHECKBOX_VISION] = false;
+initialState.checked[CHECKBOX_DRIVING] = false;
+initialState.checked[CHECKBOX_READING] = false;
+initialState.checked[CHECKBOX_OTHER] = false;
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
@@ -29,23 +38,24 @@ export default function reducer(state = initialState, action) {
         threshold: action.payload,
       };
 
-    case "SET_AGE":
-      return {
+    case "SET_CHECKED":
+      const out = {
         ...state,
-        age: action.payload,
       };
+      out.checked[action.payload] = !state[action.payload];
+      return out;
 
-    case "SET_SEX":
+    case "SET_ADDITIONAL_COMMENTS":
       return {
         ...state,
-        sex: action.payload,
-      };
+        additionalComments: action.payload,
+      };      
 
-    case "SET_NOTE":
+    case "SET_IDENTIFYING_DATA":
       return {
         ...state,
-        note: action.payload,
-      };
+        identifyingData: action.payload,
+      };       
 
     default:
       return state;

@@ -1,11 +1,9 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useState } from "react";
 import {  Tabs, Tab } from "react-bootstrap";
 import { withOrientationChange } from "react-device-detect";
 import Chart from "../Chart/Chart"
 import Eyes from "../Eyes/Eyes"
 import Scribe from "../Scribe/Scribe"
-
-// For the analysis
 
 function Main() {
   
@@ -13,7 +11,7 @@ function Main() {
   const eyes = "Eyes";
   const notes = "Notes";
   
-  const [tab, setTab] = useState(eyes);
+  const [tab, setTab] = useState(notes);
 
   const chartProps = {
     activeTab: (tab === chart),

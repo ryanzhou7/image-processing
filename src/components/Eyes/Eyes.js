@@ -6,8 +6,10 @@ import * as imageReducer from "../../redux/eyesImageReducer";
 import { useSelector, useDispatch } from "react-redux";
 import target from "../../assets/target/circle.png";
 import sample from "../../assets/sample/63.jpg";
+import Preview from "./Preview";
 import "./index.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { BAR_HEIGHT, SPACE_BETWEEN_BARS } from "../../constants";
 
 function Eyes(props) {
   // Setup
@@ -27,6 +29,7 @@ function Eyes(props) {
   // Ref
   const webcamContainerRef = useRef(null);
   const webcamRef = useRef(null);
+  const previewContainerRef = useRef(null);
 
   // Set a default image for debugging bad images
   useEffect(() => {
@@ -42,9 +45,26 @@ function Eyes(props) {
     const screenshot = webcamRef.current.getScreenshot();
     dispatch(imageReducer.setEyesImageOnload(screenshot));
     dispatch(imageReducer.setEyesImage(screenshot));
+    window.scrollTo(0, previewContainerRef.current.offsetTop);
 
     setIsCameraOn(false);
   };
+
+    // Children props setup
+    const previewProps = {
+      webcamRef,
+      webcamContainerRef,
+      image: eyesImage,
+      canvasDimensions: {
+        canvasWidth: canvasDimensions.width,
+        canvasHeight: canvasDimensions.height,
+      },
+      drawDimensions: {
+        drawWidth: canvasDimensions.width,
+        drawHeight: canvasDimensions.height,
+      },
+      cameraState: [isCameraOn, setIsCameraOn],
+    };
 
   const popover = (
     <Popover id="popover-basic">
@@ -77,11 +97,21 @@ function Eyes(props) {
                 />
                 <div className="overlay">
                   <div className="top mx-auto"
-                    style={{width: videoConstraints.width}}
+                    style={
+                      {
+                        width: videoConstraints.width,
+                        height: BAR_HEIGHT
+                      }}
                   > 
                   </div>
                   <div className="bottom mx-auto"
-                    style={{width: videoConstraints.width}}
+                    style={
+                      {
+                        width: videoConstraints.width,
+                        marginTop: SPACE_BETWEEN_BARS,
+                        height: BAR_HEIGHT
+                      }
+                    }
                   >
                   </div>
                 </div>
@@ -96,6 +126,9 @@ function Eyes(props) {
         </div>
       </Card>
 
+      <div className="mt-4" ref={previewContainerRef}>
+        <Preview {...previewProps} />
+      </div>
       <br />
       <br />
       <br />

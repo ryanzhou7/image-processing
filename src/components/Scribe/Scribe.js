@@ -1,15 +1,12 @@
 import React, { useState, useRef } from "react";
+import { Form, Row, Col } from "react-bootstrap";
 import * as CanvasHelper from "../../utils/CanvasHelper";
 import * as AdjustUtils from "../Adjuster/utils";
 import * as downloadReducer from "../../redux/downloadReducer";
 import { useSelector, useDispatch } from "react-redux";
-
 import {
-  InputGroup,
   Card,
   FormControl,
-  ToggleButton,
-  ToggleButtonGroup,
   Button,
 } from "react-bootstrap";
 import "./index.css";
@@ -17,23 +14,24 @@ import "./index.css";
 function Scribe(props) {
   const dispatch = useDispatch();
 
-  const sex = useSelector((state) => state.downloadReducer.sex);
-  const setSex = (sex) => {
-    dispatch(downloadReducer.setSex(sex));
-  };
-
+  // redux
   const threshold = useSelector((state) => state.downloadReducer.threshold);
+  const identifyingData = useSelector((state) => state.downloadReducer.identifyingData);
+  const additionalComments = useSelector((state) => state.downloadReducer.additionalComments);
+  const checked = useSelector((state) => state.downloadReducer.checked);
 
-  const age = useSelector((state) => state.downloadReducer.age);
-  const setAge = (age) => {
-    age = age.replaceAll(/[^0-9]+/g, "");
-    dispatch(downloadReducer.setAge(age));
-  };
+  function setIdentifyingData(data){
+    dispatch(downloadReducer.setIdentifyingData(data));
+  }
 
-  const note = useSelector((state) => state.downloadReducer.note);
-  const setNote = (note) => {
-    dispatch(downloadReducer.setNote(note));
-  };
+  function setAdditionalComments(data){
+    dispatch(downloadReducer.setAdditionalComments(data));
+  }
+
+  function toggleChecked(data){
+    checked[data] = !checked[data];
+    dispatch(downloadReducer.setChecked(data));
+  }
 
   const canvasRef = useRef(null);
 
@@ -42,76 +40,46 @@ function Scribe(props) {
 
   const outerNumColoredPixels = combinedCanvasInfo.numColoredOuterPixels;
   const innerNumColoredPixels = combinedCanvasInfo.numColoredInnerPixels;
-
-  let loss = AdjustUtils.calculatedLossPercent(
-    outerNumColoredPixels,
-    innerNumColoredPixels
-  );
-
   return (
     <>
       <Card>
         <Card.Body>
-          <Card.Title>Additional information: </Card.Title>
+          <Form.Group 
+            as={Row}
+            className="mb-3">
+            <Form.Label column sm="3">Identifying data:</Form.Label>
+            <Col sm="10">
+              <Form.Control
+                style={{maxWidth: 300}}
+                value={identifyingData}
+                onChange={(e) => setIdentifyingData(e.target.value)}/>
+            </Col>
+          </Form.Group>
 
-          <InputGroup
-            type="number"
-            className="mb-3 mx-auto"
-            style={{ maxWidth: "100px" }}
-          >
-            <label className="mr-2" htmlFor="age">
-              Age:
-            </label>
-            <FormControl
-              id="age"
-              onChange={(e) => setAge(e.target.value)}
-              value={age}
-            />
-          </InputGroup>
-
-          <label className="mr-2" htmlFor="sex">
-            Sex:
-          </label>
-          <span>
-            <ToggleButtonGroup
-              name="sex"
-              type="radio"
-              value={sex}
-              onChange={(value) => setSex(value)}
-            >
-              <ToggleButton
-                variant={"Male" === sex ? "primary" : "outline-primary"}
-                value={"Male"}
-              >
-                Male
-              </ToggleButton>
-              <ToggleButton
-                variant={"" === sex ? "primary" : "outline-primary"}
-                value={""}
-              >
-                N/A
-              </ToggleButton>
-              <ToggleButton
-                variant={"Female" === sex ? "primary" : "outline-primary"}
-                value={"Female"}
-              >
-                Female
-              </ToggleButton>
-            </ToggleButtonGroup>
-          </span>
-
-          <div className="mt-3">
-            <label className="mb-1" htmlFor="notes">
-              Notes:
-            </label>
-            <InputGroup className="mb-3">
+          <Form.Label className="mr-2">Patient complains of the following:</Form.Label>
+          <Form>
+            <div key={`default-checkbox`} className="mb-3">
+              {Object.keys(checked).map((key, index) =>            
+                <Form.Check 
+                  type={"checkbox"}
+                  id={key}
+                  onChange={ (e) => toggleChecked(e.target.id) }
+                  label={key}/>
+              )}
+            </div>
+          </Form>
+      
+          <Form.Group           
+            className="mb-3">
+            <Form.Label>Additional comments:</Form.Label>
               <FormControl
+                style={{maxWidth: 600}}
                 id="notes"
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-              />
-            </InputGroup>
-          </div>
+                as="textarea" rows={4}
+                value={additionalComments}
+                onChange={(e) => setAdditionalComments(e.target.value)}
+              />            
+          </Form.Group>
 
           <div className="mt-4">
             <Button
@@ -121,11 +89,7 @@ function Scribe(props) {
                   imageSource,
                   combinedCanvasInfo.canvas,
                   canvasRef,
-                  {
-                    sex,
-                    age,
-                    note,
-                    loss,
+                  {    
                     threshold,
                   }
                 )
