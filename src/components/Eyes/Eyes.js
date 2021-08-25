@@ -33,7 +33,7 @@ function Eyes(props) {
 
   // Set a default image for debugging bad images
   useEffect(() => {
-    //dispatch(imageReducer.setImageOnload(sample));
+    dispatch(imageReducer.setEyesImageOnload(sample));
   }, []);
 
   const capture = () => {

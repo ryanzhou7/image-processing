@@ -13,30 +13,38 @@ import { BAR_HEIGHT, SPACE_BETWEEN_BARS } from "../../constants";
 
 function Preview(props) {
 
-  const combinedCanvasInfo = useSelector((state) => state.combinedCanvasInfo);
-  // Props
-  const { webcamContainerRef } = props;
-  const [, setIsCameraOn] = props.cameraState;
-
-      // Child props
-  const canvasProps = {
-    ...props,
-    canvasContext: [
-      combinedCanvasInfo.context,
-      combinedCanvasInfoReducer.setContext,
-    ],
-    setCanvas: combinedCanvasInfoReducer.setCanvas,
-  };
-
+  const image = props.image;
+  const { drawWidth, drawHeight } = props.drawDimensions;
+  const { canvasWidth, canvasHeight } = props.canvasDimensions;
   const canvasRef = useRef(null);
-  const imageSource = useSelector((state) => state.chartImage.source);  
+
+  useEffect(() => {
+
+    const { current: canvas } = canvasRef;
+    if( canvas == null || image == null){
+      return;
+    }
+    
+    const context = canvas.getContext("2d");
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+    context.drawImage(image,  
+      0, BAR_HEIGHT, // How far to move from the source image top left
+      drawWidth, SPACE_BETWEEN_BARS, // how much to take from the source image
+      0, 0, // How far to move on the canvas before drawing
+      drawWidth, SPACE_BETWEEN_BARS // how much to draw on the canvas
+      );
+
+  }, [image]);
+
   return (
-      <>
-        <Card>
-        </Card>
-  
-        <canvas style={{ display: "none" }} ref={canvasRef} />
-      </>
+    <>
+      <Card>
+        <div className="mx-auto">
+          <canvas ref={canvasRef} />
+        </div>
+      </Card>
+    </>
   );
 }
 export default Preview;

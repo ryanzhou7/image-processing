@@ -11,7 +11,7 @@ function Main() {
   const eyes = "Eyes";
   const notes = "Notes";
   
-  const [tab, setTab] = useState(notes);
+  const [tab, setTab] = useState(eyes);
 
   const chartProps = {
     activeTab: (tab === chart),

@@ -24,8 +24,6 @@ function Adjuster(props) {
     dispatch(downloadReducer.setThreshold(t));
   };
 
-  const sex = useSelector((state) => state.downloadReducer.sex);
-  const age = useSelector((state) => state.downloadReducer.age);
   const note = useSelector((state) => state.downloadReducer.note);
 
   const outerNumColoredPixels = combinedCanvasInfo.numColoredOuterPixels;

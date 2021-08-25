@@ -62,6 +62,7 @@ function Scribe(props) {
               {Object.keys(checked).map((key, index) =>            
                 <Form.Check 
                   type={"checkbox"}
+                  key={key}
                   id={key}
                   onChange={ (e) => toggleChecked(e.target.id) }
                   label={key}/>
