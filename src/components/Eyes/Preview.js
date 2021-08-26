@@ -1,21 +1,17 @@
 
 import React, { useRef, useEffect } from "react";
 import { Button, Card } from "react-bootstrap";
-import { useSelector, useDispatch } from "react-redux";
-import * as combinedCanvasInfoReducer from "../../redux/combinedCanvasInfoReducer";
-import * as downloadReducer from "../../redux/downloadReducer";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Canvas from "../Canvas/Canvas";
-import * as CanvasHelper from "../../utils/CanvasHelper";
-import Scribe from "../Scribe/Scribe";
-import * as DomHelper from "../../utils/DomHelper";
 import { BAR_HEIGHT, SPACE_BETWEEN_BARS } from "../../constants";
 
 function Preview(props) {
 
+  // props
   const image = props.image;
-  const { drawWidth, drawHeight } = props.drawDimensions;
+  const { drawWidth } = props.drawDimensions;
   const { canvasWidth, canvasHeight } = props.canvasDimensions;
+  const { webcamContainerRef } = props;
+  const [, setIsCameraOn] = props.cameraState;
+
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -27,7 +23,7 @@ function Preview(props) {
     
     const context = canvas.getContext("2d");
     canvas.width = canvasWidth;
-    canvas.height = canvasHeight;
+    canvas.height = SPACE_BETWEEN_BARS;
     context.drawImage(image,  
       0, BAR_HEIGHT, // How far to move from the source image top left
       drawWidth, SPACE_BETWEEN_BARS, // how much to take from the source image
@@ -39,11 +35,32 @@ function Preview(props) {
 
   return (
     <>
-      <Card>
-        <div className="mx-auto">
-          <canvas ref={canvasRef} />
-        </div>
-      </Card>
+      {image &&
+        (<Card>
+          <div className="mx-auto py-4">
+            <canvas ref={canvasRef} />
+          </div>
+
+          <div className={`d-flex align-items-center mx-auto mb-4`}>
+            <Button
+              variant="outline-primary"
+              className={"mr-2"}
+              onClick={() => {
+                setIsCameraOn(true);
+                window.scrollTo(0, webcamContainerRef.current.offsetTop);
+              }}
+            >
+              Retake picture
+            </Button>
+
+            <Button
+              variant="primary">
+              Download
+            </Button>
+
+          </div>                
+        </Card>)
+      }
     </>
   );
 }
