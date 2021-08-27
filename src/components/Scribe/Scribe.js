@@ -4,6 +4,7 @@ import * as CanvasHelper from "../../utils/CanvasHelper";
 import * as AdjustUtils from "../Adjuster/utils";
 import * as downloadReducer from "../../redux/downloadReducer";
 import { useSelector, useDispatch } from "react-redux";
+import Download from "../Download/Download";
 import {
   Card,
   FormControl,
@@ -15,7 +16,6 @@ function Scribe(props) {
   const dispatch = useDispatch();
 
   // redux
-  const threshold = useSelector((state) => state.downloadReducer.threshold);
   const identifyingData = useSelector((state) => state.downloadReducer.identifyingData);
   const additionalComments = useSelector((state) => state.downloadReducer.additionalComments);
   const checked = useSelector((state) => state.downloadReducer.checked);
@@ -83,22 +83,7 @@ function Scribe(props) {
           </Form.Group>
 
           <div className="mt-4">
-            <Button
-              variant="primary"
-              onClick={() =>
-                CanvasHelper.download(
-                  imageSource,
-                  combinedCanvasInfo.canvas,
-                  canvasRef,
-                  {    
-                    threshold,
-                  }
-                )
-              }
-              size="lg"
-            >
-              Download
-            </Button>
+            <Download/>
           </div>
         </Card.Body>
       </Card>

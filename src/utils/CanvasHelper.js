@@ -1,8 +1,13 @@
 const VERSION = "1.0";
 const TITLE_STYLE = "bold 20px Arial";
 const SUBTEXT_STYLE = "normal 15px Arial";
+const CANVAS_WIDTH = 500;
+const TITLE_X = 250;
+const SUBTEXT_X = 250;
+const CHECKED_Y_PER = 50;
 
-async function download(originalImage, analyzedCanvas, drawingCanvasRef, info) {
+async function download2(originalImage, analyzedCanvas, drawingCanvasRef, info) {
+
   const { current: drawCanvas } = drawingCanvasRef;
   const ctx = drawCanvas.getContext("2d");
 
@@ -47,6 +52,73 @@ async function download(originalImage, analyzedCanvas, drawingCanvasRef, info) {
   a.href = data;
   a.download = getDownloadName(info);
   a.click();
+}
+
+async function download(data){
+  const{
+    drawingCanvas,
+    chartCanvas,
+    identifyingData,
+    additionalComments,
+    checked,
+    eyesImage,    
+  } = data;
+}
+
+function getCheckedDownloadHeight(checked){
+  let count = 0;
+  for (const [key, value] of Object.entries(checked)) {
+    if( value ){
+      count++;
+    }
+  }
+  return count*CHECKED_Y_PER;
+}
+
+function shouldDownloadComments(additionalComments){
+  return !!additionalComments;
+}
+
+function shouldDownloadChart(chartCanvas){
+  return !!chartCanvas;
+}
+
+function shouldDownloadEyes(eyesImage){
+  return !!eyesImage;
+}
+
+function shouldDownloadidentifyingData(identifyingData){
+  return !!identifyingData;
+}
+
+function getCanvasHeight(data){
+  const{
+    chartCanvas,
+    identifyingData,
+    additionalComments,
+    checked,
+    eyesImage,    
+  } = data;
+
+  let height = 0;
+  if( shouldDownloadChart(chartCanvas) ){
+    height += 0;
+  }
+  if( shouldDownloadEyes(eyesImage) ){
+    height += 0;
+  }
+
+  if( shouldDownloadidentifyingData(identifyingData) ){
+    height += 0;
+  }
+
+  height += getCheckedDownloadHeight(checked);
+
+  if( shouldDownloadComments(additionalComments) ){
+    height += 0;
+  }
+
+  return height;
 }
 
 async function downloadWithNotes(

@@ -2,6 +2,7 @@
 import React, { useRef, useEffect } from "react";
 import { Button, Card } from "react-bootstrap";
 import { BAR_HEIGHT, SPACE_BETWEEN_BARS } from "../../constants";
+import Download from "../Download/Download";
 
 function Preview(props) {
 
@@ -52,12 +53,7 @@ function Preview(props) {
             >
               Retake picture
             </Button>
-
-            <Button
-              variant="primary">
-              Download
-            </Button>
-
+            <Download/>
           </div>                
         </Card>)
       }

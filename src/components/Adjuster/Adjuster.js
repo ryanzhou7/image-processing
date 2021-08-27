@@ -1,5 +1,5 @@
-import React, { useRef, useEffect } from "react";
-import { Button, Card } from "react-bootstrap";
+import React, { useRef, useEffect, useState } from "react";
+import { Button, Card, Spinner } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import * as combinedCanvasInfoReducer from "../../redux/combinedCanvasInfoReducer";
 import * as downloadReducer from "../../redux/downloadReducer";
@@ -13,17 +13,17 @@ import * as DomHelper from "../../utils/DomHelper";
 function Adjuster(props) {
   const dispatch = useDispatch();
 
-  // State
+  // redux
   const combinedCanvas = useSelector(
     (state) => state.combinedCanvasInfo.canvas
   );
   const combinedCanvasInfo = useSelector((state) => state.combinedCanvasInfo);
   const imageSource = useSelector((state) => state.chartImage.source);
   const threshold = useSelector((state) => state.downloadReducer.threshold);
+
   const setThreshold = (t) => {
     dispatch(downloadReducer.setThreshold(t));
   };
-
   const note = useSelector((state) => state.downloadReducer.note);
 
   const outerNumColoredPixels = combinedCanvasInfo.numColoredOuterPixels;
@@ -32,6 +32,8 @@ function Adjuster(props) {
   // Props
   const { webcamContainerRef } = props;
   const [, setIsCameraOn] = props.cameraState;
+  const [ isLoading, setIsLoading ] = props.isLoadingState;
+  const { autoAnalyzeContainerRef } = props;
 
   let loss = utils.calculatedLossPercent(
     outerNumColoredPixels,
@@ -52,25 +54,31 @@ function Adjuster(props) {
   function changeThresholdBy(value) {
     setThreshold(Math.max(0, threshold + value));
   }
-
+  
   useEffect(() => {
     async function f() {
-      if (imageSource) {
-        const threshold = await utils.getCorrectThreshold(fullAnalysis);
-        setThreshold(threshold);
-      }
+      const threshold = await utils.getCorrectThreshold(fullAnalysis);
+      setThreshold(threshold);
     }
-    f();
-  }, [imageSource]);
+
+    if(imageSource && isLoading) {
+      f();
+    }
+  }, [imageSource, isLoading]);
 
   useEffect(() => {
     if (imageSource) {
       fullAnalysis(threshold);
     }
+    if(isLoading){
+
+      window.scrollTo(0, autoAnalyzeContainerRef.current.offsetTop);
+      setIsLoading(false);
+    }
   }, [threshold]);
 
-  function fullAnalysis(currThreshold) {
-    const { topPixelsCount, bottomPixelsCount } = utils.fullAnalysis(
+  async function fullAnalysis(currThreshold) {
+    const { topPixelsCount, bottomPixelsCount } = await utils.fullAnalysis(
       imageSource,
       combinedCanvasInfo,
       currThreshold
@@ -82,13 +90,13 @@ function Adjuster(props) {
     dispatch(
       combinedCanvasInfoReducer.setNumColoredInnerPixels(bottomPixelsCount)
     );
-
+  
     return (100 * (topPixelsCount - bottomPixelsCount)) / topPixelsCount;
   }
 
   return (
     <>
-      <Card>
+      <Card style={{ display: isLoading ? "none" : "" }}>
         {imageSource && <h2 className="card-title">Results</h2>}
         <div>
           <Canvas {...canvasProps} />

@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { Button, Card, OverlayTrigger, Popover } from "react-bootstrap";
+import { Button, Card, OverlayTrigger, Popover, Spinner } from "react-bootstrap";
 import { withOrientationChange } from "react-device-detect";
 import Webcam from "react-webcam";
 import * as imageReducer from "../../redux/chartImageReducer";
@@ -15,7 +15,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 function Chart(props) {
   // Setup
   const dispatch = useDispatch();
+  
   const [isCameraOn, setIsCameraOn] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const activeTab = props.activeTab;
 
   // Redux
@@ -37,7 +39,7 @@ function Chart(props) {
 
   // Set a default image for debugging bad images
   useEffect(() => {
-    dispatch(imageReducer.setChartImageOnload(sample));
+    //dispatch(imageReducer.setChartImageOnload(sample));
   }, []);
 
   const capture = () => {
@@ -49,9 +51,8 @@ function Chart(props) {
     const screenshot = webcamRef.current.getScreenshot();
     dispatch(imageReducer.setChartImageOnload(screenshot));
     dispatch(imageReducer.setChartImage(screenshot));
-    window.scrollTo(0, autoAnalyzeContainerRef.current.offsetTop);
-
     setIsCameraOn(false);
+    setIsLoading(true);
   };
 
   // Children props setup
@@ -68,7 +69,9 @@ function Chart(props) {
       drawHeight: canvasDimensions.height,
     },
     isPortrait,
+    autoAnalyzeContainerRef,
     cameraState: [isCameraOn, setIsCameraOn],
+    isLoadingState: [isLoading, setIsLoading]
   };
 
   const popover = (
@@ -90,37 +93,50 @@ function Chart(props) {
       <OverlayTrigger trigger="click" placement="bottom" overlay={popover} >
         <FontAwesomeIcon icon="question-circle" size="2x" />
       </OverlayTrigger>
-      <Card className="mt-4">
-        <div className="mx-auto">
-          <div className="capture-container mx-auto" ref={webcamContainerRef}>
-            {isCameraOn && activeTab &&(
-              <>
-                <Webcam
-                  ref={webcamRef}
-                  audio={false}
-                  height={videoConstraints.height}
-                  screenshotFormat="image/jpeg"
-                  width={videoConstraints.width}
-                  videoConstraints={videoConstraints}
-                />
-                <div className="overlay">
-                  <img
-                    className="target"
-                    //width -20 leaves some padding on the left and right side
-                    style={{ width: videoConstraints.width - 20 }}
-                    src={target}
+
+      {isLoading && 
+        (
+          <div className="mt-4">
+            <Spinner animation="border" variant="primary" />
+            <h6>Analyzing...</h6>
+        </div>
+        )
+      }
+
+      {!isLoading &&
+        (<Card className="mt-4">
+          <div className="mx-auto">
+            <div className="capture-container mx-auto" ref={webcamContainerRef}>
+              {isCameraOn && activeTab &&(
+                <>
+                  <Webcam
+                    ref={webcamRef}
+                    audio={false}
+                    height={videoConstraints.height}
+                    screenshotFormat="image/jpeg"
+                    width={videoConstraints.width}
+                    videoConstraints={videoConstraints}
                   />
-                </div>
-              </>
-            )}
+                  <div className="overlay">
+                    <img
+                      className="target"
+                      //width -20 leaves some padding on the left and right side
+                      style={{ width: videoConstraints.width - 20 }}
+                      src={target}
+                    />
+                  </div>
+                </>
+              )}
+            </div>
           </div>
-        </div>
-        <div className="my-2 z-top mx-auto">
-          <Button className="capture-button" onClick={() => capture()}>
-            <FontAwesomeIcon icon="camera" size="3x" />
-          </Button>
-        </div>
-      </Card>
+          <div className="my-2 z-top mx-auto">
+            <Button className="capture-button" onClick={() => capture()}>
+              <FontAwesomeIcon icon="camera" size="3x" />
+            </Button>
+          </div>
+        </Card>
+        )
+      }
 
       <div className="mt-4" ref={autoAnalyzeContainerRef}>
         <Adjuster {...adjusterProps} />
