@@ -1,5 +1,6 @@
 const sourceSet = "CHART_IMAGE_SOURCE_SET";
 const imageSet = "CHART_SET";
+
 export function setChartImageOnload(source) {
   return (dispatch) => {
     const image = new Image();

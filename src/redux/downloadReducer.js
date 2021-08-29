@@ -17,18 +17,16 @@ export function setAdditionalComments(additionalComments) {
 }
 
 const initialState = {
-
   threshold: 20,
-
-  identifyingData: "",
-  additionalComments: "",
+  identifyingData: "314234234",
+  additionalComments: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like)",
   checked:{
+    [CHECKBOX_VISION]: true,
+    [CHECKBOX_DRIVING]: true,
+    [CHECKBOX_READING]: true,
+    [CHECKBOX_OTHER]: true,
   }
 };
-initialState.checked[CHECKBOX_VISION] = false;
-initialState.checked[CHECKBOX_DRIVING] = false;
-initialState.checked[CHECKBOX_READING] = false;
-initialState.checked[CHECKBOX_OTHER] = false;
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
@@ -39,11 +37,14 @@ export default function reducer(state = initialState, action) {
       };
 
     case "SET_CHECKED":
-      const out = {
+      const value = !state.checked[action.payload]
+      return {
         ...state,
+         checked: {
+           ...state.checked,
+           [action.payload]: value
+         }
       };
-      out.checked[action.payload] = !state[action.payload];
-      return out;
 
     case "SET_ADDITIONAL_COMMENTS":
       return {

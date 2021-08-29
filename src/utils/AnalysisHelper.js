@@ -1,5 +1,5 @@
-import * as ImageAnalysis from "./ImageAnalysis";
-import CanvasDataHelper from "../../models/canvasData";
+import * as ImageAnalysis from "../components/Adjuster/ImageAnalysis";
+import CanvasDataHelper from "../models/canvasData";
 //import jsfeat from "jsfeat";
 
 // Consider that some non chart area will be capture, thus start the calculations from a padding, not from the very top

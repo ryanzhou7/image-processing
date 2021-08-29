@@ -4,12 +4,14 @@ import { withOrientationChange } from "react-device-detect";
 import Webcam from "react-webcam";
 import * as imageReducer from "../../redux/eyesImageReducer";
 import { useSelector, useDispatch } from "react-redux";
-import target from "../../assets/target/circle.png";
 import sample from "../../assets/sample/63.jpg";
 import Preview from "./Preview";
 import "./index.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { BAR_HEIGHT, SPACE_BETWEEN_BARS } from "../../constants";
+import { BAR_HEIGHT, EYES_IMAGE_HEIGHT } from "../../constants";
+import { calculatedLossPercent } from "../../utils/AnalysisHelper";
+import * as downloadReducer from "../../redux/downloadReducer";
+import * as utils from "../../utils/AnalysisHelper";
 
 function Eyes(props) {
   // Setup
@@ -21,6 +23,7 @@ function Eyes(props) {
   const videoConstraints = useSelector(
     (state) => state.videoReducer.videoConstraints
   );
+  const combinedCanvasInfo = useSelector((state) => state.combinedCanvasInfo);
   const eyesImage = useSelector((state) => state.eyesImage.source);
   const canvasDimensions = useSelector(
     (state) => state.canvasSettings.canvasDimensions
@@ -67,12 +70,13 @@ function Eyes(props) {
     };
 
   const popover = (
-    <Popover id="popover-basic">
+    <Popover id="popover-eyes">
       <Popover.Content>
         Please position only the patients eyes between the black bars
       </Popover.Content>
     </Popover>
   );
+
   return (
 
     <div className="App mt-2">
@@ -108,7 +112,7 @@ function Eyes(props) {
                     style={
                       {
                         width: videoConstraints.width,
-                        marginTop: SPACE_BETWEEN_BARS,
+                        marginTop: EYES_IMAGE_HEIGHT,
                         height: BAR_HEIGHT
                       }
                     }

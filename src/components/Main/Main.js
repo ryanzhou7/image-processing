@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import {  Tabs, Tab, Form } from "react-bootstrap";
+import { useSelector, useDispatch } from "react-redux";
+import { Button, Tabs, Tab, Form } from "react-bootstrap";
 import { withOrientationChange } from "react-device-detect";
 import Chart from "../Chart/Chart"
 import Eyes from "../Eyes/Eyes"
 import Scribe from "../Scribe/Scribe"
+import * as utils from "../../utils/AnalysisHelper";
 
 function Main() {
   
@@ -11,7 +13,7 @@ function Main() {
   const eyes = "Eyes";
   const notes = "Notes";
   
-  const [tab, setTab] = useState(chart);
+  const [tab, setTab] = useState(notes);
 
   const chartProps = {
     activeTab: (tab === chart),
@@ -20,6 +22,12 @@ function Main() {
   const eyesProps = {
     activeTab: (tab === eyes),
   };
+
+  const combinedCanvasInfo = useSelector((state) => state.combinedCanvasInfo);
+  const loss = utils.calculatedLossPercent(
+    combinedCanvasInfo.outerNumColoredPixels,
+    combinedCanvasInfo.innerNumColoredPixels
+  );
 
   return (
     <>

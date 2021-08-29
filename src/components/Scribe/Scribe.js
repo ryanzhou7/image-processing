@@ -1,18 +1,16 @@
 import React, { useState, useRef } from "react";
 import { Form, Row, Col } from "react-bootstrap";
-import * as CanvasHelper from "../../utils/CanvasHelper";
-import * as AdjustUtils from "../Adjuster/utils";
 import * as downloadReducer from "../../redux/downloadReducer";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, connect } from "react-redux";
 import Download from "../Download/Download";
+import { CHECKBOX_TITLE, IDENTIFYING_DATA_LABEL, ADDITIONAL_COMMENTS_LABEL } from "../../constants";
 import {
   Card,
   FormControl,
-  Button,
 } from "react-bootstrap";
 import "./index.css";
 
-function Scribe(props) {
+function Scribe() {
   const dispatch = useDispatch();
 
   // redux
@@ -29,17 +27,9 @@ function Scribe(props) {
   }
 
   function toggleChecked(data){
-    checked[data] = !checked[data];
     dispatch(downloadReducer.setChecked(data));
   }
 
-  const canvasRef = useRef(null);
-
-  const imageSource = useSelector((state) => state.chartImage.source);
-  const combinedCanvasInfo = useSelector((state) => state.combinedCanvasInfo);
-
-  const outerNumColoredPixels = combinedCanvasInfo.numColoredOuterPixels;
-  const innerNumColoredPixels = combinedCanvasInfo.numColoredInnerPixels;
   return (
     <>
       <Card>
@@ -47,7 +37,7 @@ function Scribe(props) {
           <Form.Group 
             as={Row}
             className="mb-3">
-            <Form.Label column sm="3">Identifying data:</Form.Label>
+            <Form.Label column sm="3">{IDENTIFYING_DATA_LABEL}</Form.Label>
             <Col sm="10">
               <Form.Control
                 style={{maxWidth: 300}}
@@ -56,14 +46,15 @@ function Scribe(props) {
             </Col>
           </Form.Group>
 
-          <Form.Label className="mr-2">Patient complains of the following:</Form.Label>
+          <Form.Label className="mr-2">{CHECKBOX_TITLE}</Form.Label>
           <Form>
-            <div key={`default-checkbox`} className="mb-3">
+            <div className="mb-3">
               {Object.keys(checked).map((key, index) =>            
-                <Form.Check 
+                 <Form.Check 
                   type={"checkbox"}
                   key={key}
                   id={key}
+                  checked={checked[key]}   
                   onChange={ (e) => toggleChecked(e.target.id) }
                   label={key}/>
               )}
@@ -72,7 +63,7 @@ function Scribe(props) {
       
           <Form.Group           
             className="mb-3">
-            <Form.Label>Additional comments:</Form.Label>
+            <Form.Label>{ADDITIONAL_COMMENTS_LABEL}</Form.Label>
               <FormControl
                 style={{maxWidth: 600}}
                 id="notes"
@@ -81,15 +72,11 @@ function Scribe(props) {
                 onChange={(e) => setAdditionalComments(e.target.value)}
               />            
           </Form.Group>
-
-          <div className="mt-4">
-            <Download/>
-          </div>
         </Card.Body>
       </Card>
-      <canvas style={{ display: "none" }} ref={canvasRef} />
     </>
   );
 }
 
-export default Scribe;
+
+export default Scribe

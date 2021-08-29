@@ -10,8 +10,6 @@ import sample from "../../assets/sample/63.jpg";
 import "./index.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-// For the analysis
-
 function Chart(props) {
   // Setup
   const dispatch = useDispatch();
@@ -29,9 +27,6 @@ function Chart(props) {
     (state) => state.canvasSettings.canvasDimensions
   );
 
-  // Props
-  const { isPortrait } = props;
-
   // Ref
   const webcamContainerRef = useRef(null);
   const webcamRef = useRef(null);
@@ -39,7 +34,7 @@ function Chart(props) {
 
   // Set a default image for debugging bad images
   useEffect(() => {
-    //dispatch(imageReducer.setChartImageOnload(sample));
+    dispatch(imageReducer.setChartImageOnload(sample));
   }, []);
 
   const capture = () => {
@@ -57,9 +52,8 @@ function Chart(props) {
 
   // Children props setup
   const adjusterProps = {
-    webcamRef,
     webcamContainerRef,
-    image: image,
+    image,
     canvasDimensions: {
       canvasWidth: canvasDimensions.width,
       canvasHeight: canvasDimensions.height,
@@ -68,14 +62,13 @@ function Chart(props) {
       drawWidth: canvasDimensions.width,
       drawHeight: canvasDimensions.height,
     },
-    isPortrait,
     autoAnalyzeContainerRef,
     cameraState: [isCameraOn, setIsCameraOn],
     isLoadingState: [isLoading, setIsLoading]
   };
 
   const popover = (
-    <Popover id="popover-basic">
+    <Popover id="popover-chart">
       <Popover.Content>
         Draw your chart with red sharpie. Align the red target's circle
         concentrically with the chart's smallest circle that still encompasses
@@ -98,7 +91,7 @@ function Chart(props) {
         (
           <div className="mt-4">
             <Spinner animation="border" variant="primary" />
-            <h6>Analyzing...</h6>
+            <h5>Analyzing...</h5>
         </div>
         )
       }

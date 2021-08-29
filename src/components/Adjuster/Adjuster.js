@@ -5,18 +5,13 @@ import * as combinedCanvasInfoReducer from "../../redux/combinedCanvasInfoReduce
 import * as downloadReducer from "../../redux/downloadReducer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Canvas from "../Canvas/Canvas";
-import * as utils from "./utils";
-import * as CanvasHelper from "../../utils/CanvasHelper";
-import Scribe from "../Scribe/Scribe";
-import * as DomHelper from "../../utils/DomHelper";
+import * as utils from "../../utils/AnalysisHelper";
+import Download from "../Download/Download";
 
 function Adjuster(props) {
   const dispatch = useDispatch();
 
   // redux
-  const combinedCanvas = useSelector(
-    (state) => state.combinedCanvasInfo.canvas
-  );
   const combinedCanvasInfo = useSelector((state) => state.combinedCanvasInfo);
   const imageSource = useSelector((state) => state.chartImage.source);
   const threshold = useSelector((state) => state.downloadReducer.threshold);
@@ -24,7 +19,6 @@ function Adjuster(props) {
   const setThreshold = (t) => {
     dispatch(downloadReducer.setThreshold(t));
   };
-  const note = useSelector((state) => state.downloadReducer.note);
 
   const outerNumColoredPixels = combinedCanvasInfo.numColoredOuterPixels;
   const innerNumColoredPixels = combinedCanvasInfo.numColoredInnerPixels;
@@ -35,7 +29,7 @@ function Adjuster(props) {
   const [ isLoading, setIsLoading ] = props.isLoadingState;
   const { autoAnalyzeContainerRef } = props;
 
-  let loss = utils.calculatedLossPercent(
+  const loss = utils.calculatedLossPercent(
     outerNumColoredPixels,
     innerNumColoredPixels
   );
@@ -50,21 +44,20 @@ function Adjuster(props) {
     setCanvas: combinedCanvasInfoReducer.setCanvas,
   };
 
-  const canvasRef = useRef(null);
   function changeThresholdBy(value) {
     setThreshold(Math.max(0, threshold + value));
   }
   
-  useEffect(() => {
-    async function f() {
-      const threshold = await utils.getCorrectThreshold(fullAnalysis);
-      setThreshold(threshold);
-    }
+  // useEffect(() => {
+  //   async function f() {
+  //     const threshold = await utils.getCorrectThreshold(fullAnalysis);
+  //     setThreshold(threshold);
+  //   }
 
-    if(imageSource && isLoading) {
-      f();
-    }
-  }, [imageSource, isLoading]);
+  //   if(imageSource && isLoading) {
+  //     f();
+  //   }
+  // }, [imageSource, isLoading]);
 
   useEffect(() => {
     if (imageSource) {
@@ -75,10 +68,10 @@ function Adjuster(props) {
       window.scrollTo(0, autoAnalyzeContainerRef.current.offsetTop);
       setIsLoading(false);
     }
-  }, [threshold]);
+  }, [imageSource, threshold]);
 
   async function fullAnalysis(currThreshold) {
-    const { topPixelsCount, bottomPixelsCount } = await utils.fullAnalysis(
+    const { topPixelsCount, bottomPixelsCount } = utils.fullAnalysis(
       imageSource,
       combinedCanvasInfo,
       currThreshold
@@ -114,30 +107,9 @@ function Adjuster(props) {
                 >
                   Retake picture
                 </Button>
-
                 <div>
                   <h3 className="mt-4">Loss: {loss}%</h3>
-
-                  <div className="mt-4">
-                    <Button
-                      variant="primary"
-                      onClick={() =>
-                        CanvasHelper.download(
-                          imageSource,
-                          combinedCanvasInfo.canvas,
-                          canvasRef,
-                          {
-                            note,
-                            loss,
-                            threshold,
-                          }
-                        )
-                      }
-                      size="lg"
-                    >
-                      Download
-                    </Button>
-                  </div>
+                  <Download loss={loss} />
                 </div>
               </div>
 
@@ -189,14 +161,6 @@ function Adjuster(props) {
           )}
         </div>
       </Card>
-
-      <canvas style={{ display: "none" }} ref={canvasRef} />
-      {/* {imageSource && (
-        <div className="mt-4">
-          <canvas style={{ display: "none" }} ref={canvasRef} />
-          <Scribe />
-        </div>
-      )} */}
     </>
   );
 }
