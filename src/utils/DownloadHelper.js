@@ -31,7 +31,7 @@ function download(data){
     currentY += 10;
 
     setSubtitleFont(doc);
-    doc.text("Loss: " + loss + " %", 75, currentY)
+    doc.text("Loss: " + loss + " %", 85, currentY)
     currentY += nextYminor;
 
     doc.addImage(chartCanvas, 'jpeg', chartXStart, currentY, chartWidth, chartHeight);
@@ -70,7 +70,7 @@ function download(data){
 
     setSubtitleFont(doc);
     doc.text(CHECKBOX_TITLE, checkedXStart, currentY);
-    currentY += nextYminor;
+    currentY += 10;
 
     setTextFont(doc);
     checkedXStart += 10;

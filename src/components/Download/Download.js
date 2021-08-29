@@ -15,14 +15,15 @@ function Download(props) {
     
     const chartImage = useSelector((state) => state.chartImage.source);
     const eyesImage = useSelector((state) => state.eyesImage.source);
-    
-    // const loss = calculatedLossPercent(
-    //     combinedCanvasInfo.outerNumColoredPixels,
-    //     combinedCanvasInfo.innerNumColoredPixels
-    // );
-    const loss = props.loss;
-
     const eyesCanvas = useSelector((state) => state.eyesImage.canvas);
+
+    const outerNumColoredPixels = combinedCanvasInfo.numColoredOuterPixels;
+    const innerNumColoredPixels = combinedCanvasInfo.numColoredInnerPixels;
+    const loss = calculatedLossPercent(
+      outerNumColoredPixels,
+      innerNumColoredPixels
+    );
+
     const downloadData = {
         
         chartCanvas: nullify(chartImage, chartCanvas),
@@ -36,7 +37,6 @@ function Download(props) {
     return(
         <>
             <Button
-                className="mr-4"
                 variant="primary"
                 onClick={() => download(downloadData)}>
                 Download

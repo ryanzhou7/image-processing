@@ -1,5 +1,6 @@
 const sourceSet = "CHART_IMAGE_SOURCE_SET";
 const imageSet = "CHART_SET";
+const chartReset = "CHART_RESET";
 
 export function setChartImageOnload(source) {
   return (dispatch) => {
@@ -16,6 +17,10 @@ export function setChartImage(image) {
     type: imageSet,
     payload: image,
   };
+}
+
+export function reset() {
+  return { type: chartReset, payload: null };
 }
 
 const initialState = {
@@ -35,6 +40,13 @@ export default function reducer(state = initialState, action) {
         ...state,
         image: action.payload,
       };
+    case reset:
+      return {
+        ...state,
+        source: null,
+        image: null,
+      };
+
     default:
       return state;
   }

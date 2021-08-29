@@ -16,15 +16,19 @@ export function setAdditionalComments(additionalComments) {
   return { type: "SET_ADDITIONAL_COMMENTS", payload: additionalComments };
 }
 
+export function reset() {
+  return { type: "DOWNLOAD_RESET", payload: null };
+}
+
 const initialState = {
   threshold: 20,
-  identifyingData: "314234234",
-  additionalComments: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like)",
+  identifyingData: "",
+  additionalComments: "",
   checked:{
-    [CHECKBOX_VISION]: true,
-    [CHECKBOX_DRIVING]: true,
-    [CHECKBOX_READING]: true,
-    [CHECKBOX_OTHER]: true,
+    [CHECKBOX_VISION]: false,
+    [CHECKBOX_DRIVING]: false,
+    [CHECKBOX_READING]: false,
+    [CHECKBOX_OTHER]: false,
   }
 };
 
@@ -56,7 +60,22 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         identifyingData: action.payload,
-      };       
+      };
+
+    case "DOWNLOAD_RESET":
+      const initialState = {
+        ...state,
+        threshold: 20,
+        identifyingData: "",
+        additionalComments: "",
+        checked:{
+          [CHECKBOX_VISION]: false,
+          [CHECKBOX_DRIVING]: false,
+          [CHECKBOX_READING]: false,
+          [CHECKBOX_OTHER]: false,
+        }
+      };
+      return initialState;
 
     default:
       return state;

@@ -32,9 +32,9 @@ function Chart(props) {
   const webcamRef = useRef(null);
   const autoAnalyzeContainerRef = useRef(null);
 
-  // Set a default image for debugging bad images
+  // Set a default image for debugging
   useEffect(() => {
-    dispatch(imageReducer.setChartImageOnload(sample));
+    //dispatch(imageReducer.setChartImageOnload(sample));
   }, []);
 
   const capture = () => {

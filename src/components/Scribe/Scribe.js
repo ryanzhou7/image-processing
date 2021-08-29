@@ -1,8 +1,9 @@
 import React, { useState, useRef } from "react";
 import { Form, Row, Col } from "react-bootstrap";
 import * as downloadReducer from "../../redux/downloadReducer";
-import { useSelector, useDispatch, connect } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Download from "../Download/Download";
+import Reset from "../Reset/Reset";
 import { CHECKBOX_TITLE, IDENTIFYING_DATA_LABEL, ADDITIONAL_COMMENTS_LABEL } from "../../constants";
 import {
   Card,
@@ -70,8 +71,14 @@ function Scribe() {
                 as="textarea" rows={4}
                 value={additionalComments}
                 onChange={(e) => setAdditionalComments(e.target.value)}
-              />            
+              />
           </Form.Group>
+
+          <div>
+            <span className="mr-3">
+              <Download/> 
+            </span>            
+          </div>
         </Card.Body>
       </Card>
     </>

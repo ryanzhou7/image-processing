@@ -9,6 +9,7 @@ import Preview from "./Preview";
 import "./index.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { BAR_HEIGHT, EYES_IMAGE_HEIGHT } from "../../constants";
+import * as combinedCanvasInfoReducer from "../../redux/combinedCanvasInfoReducer";
 import { calculatedLossPercent } from "../../utils/AnalysisHelper";
 import * as downloadReducer from "../../redux/downloadReducer";
 import * as utils from "../../utils/AnalysisHelper";
@@ -23,7 +24,6 @@ function Eyes(props) {
   const videoConstraints = useSelector(
     (state) => state.videoReducer.videoConstraints
   );
-  const combinedCanvasInfo = useSelector((state) => state.combinedCanvasInfo);
   const eyesImage = useSelector((state) => state.eyesImage.source);
   const canvasDimensions = useSelector(
     (state) => state.canvasSettings.canvasDimensions
@@ -36,7 +36,7 @@ function Eyes(props) {
 
   // Set a default image for debugging bad images
   useEffect(() => {
-    dispatch(imageReducer.setEyesImageOnload(sample));
+    //dispatch(imageReducer.setEyesImageOnload(sample));
   }, []);
 
   const capture = () => {
@@ -48,8 +48,6 @@ function Eyes(props) {
     const screenshot = webcamRef.current.getScreenshot();
     dispatch(imageReducer.setEyesImageOnload(screenshot));
     dispatch(imageReducer.setEyesImage(screenshot));
-    window.scrollTo(0, previewContainerRef.current.offsetTop);
-
     setIsCameraOn(false);
   };
 
@@ -130,7 +128,7 @@ function Eyes(props) {
         </div>
       </Card>
 
-      <div className="mt-4" ref={previewContainerRef}>
+      <div className="mt-4">
         <Preview {...previewProps} />
       </div>
       <br />

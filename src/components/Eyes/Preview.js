@@ -20,12 +20,7 @@ function Preview(props) {
   const [, setIsCameraOn] = props.cameraState;
 
   const canvasRef = useRef(null);
-
-  const combinedCanvasInfo = useSelector((state) => state.combinedCanvasInfo);
-  let loss = calculatedLossPercent(
-    combinedCanvasInfo.outerNumColoredPixels,
-    combinedCanvasInfo.innerNumColoredPixels
-  );
+  const cardRef = useRef(null);
 
   useEffect(() => {
 
@@ -46,20 +41,21 @@ function Preview(props) {
       drawWidth, EYES_IMAGE_HEIGHT // how much to draw on the canvas
       );
 
+      window.scrollTo(0, cardRef.current.offsetTop);
   }, [image]);
 
   return (
     <>
-      <Card style={{display: image == null ? "none" : ""}}>
-        <h2 className="card-title">Results</h2>
-        <div className="mx-auto p3-4">
+      <Card style={{display: image == null ? "none" : ""}} ref={cardRef}>
+        <h2 className="card-title">Preview</h2>
+        <div className="mx-auto mb-3">
           <canvas ref={canvasRef} />
         </div>
 
         <div className={`d-flex align-items-center mx-auto mb-4`}>
           <Button
             variant="outline-primary"
-            className={"mr-2"}
+            className={"mr-3"}
             onClick={() => {
               setIsCameraOn(true);
               window.scrollTo(0, webcamContainerRef.current.offsetTop);
@@ -67,6 +63,7 @@ function Preview(props) {
           >
             Retake picture
           </Button>
+          <Download/>
         </div>                
       </Card>    
     </>

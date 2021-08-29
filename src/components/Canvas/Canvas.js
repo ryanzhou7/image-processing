@@ -19,8 +19,13 @@ function Canvas(props) {
   }, []);
 
   useEffect(() => {
-    if (image == null || canvasContext == null) {
+    if (canvasContext == null) {
       return;
+    }
+
+    // Could be reset
+    if( image == null ){
+      canvasContext.clearRect(0, 0, drawWidth, drawHeight);
     }
 
     const { current: canvas } = canvasRef;

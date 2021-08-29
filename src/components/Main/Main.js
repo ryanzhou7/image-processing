@@ -13,7 +13,7 @@ function Main() {
   const eyes = "Eyes";
   const notes = "Notes";
   
-  const [tab, setTab] = useState(notes);
+  const [tab, setTab] = useState(chart);
 
   const chartProps = {
     activeTab: (tab === chart),
@@ -22,12 +22,6 @@ function Main() {
   const eyesProps = {
     activeTab: (tab === eyes),
   };
-
-  const combinedCanvasInfo = useSelector((state) => state.combinedCanvasInfo);
-  const loss = utils.calculatedLossPercent(
-    combinedCanvasInfo.outerNumColoredPixels,
-    combinedCanvasInfo.innerNumColoredPixels
-  );
 
   return (
     <>
