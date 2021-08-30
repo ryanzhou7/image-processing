@@ -12,4 +12,3 @@ export const CHECKBOX_VISION = "Vision";
 export const CHECKBOX_DRIVING = "Driving";
 export const CHECKBOX_READING = "Reading";
 export const CHECKBOX_OTHER = "Other activities of daily living";
-
